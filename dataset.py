@@ -54,14 +54,13 @@ def main():
         auto_model=WhisperForConditionalGeneration,
         whisper_language="Spanish",
         whisper_task="transcribe",
-        token=HF_TOKEN,
-    )
+        )
     print("Tokenizer initialized.")
 
     # Step 2: Load the original dataset from the Hub
     original_dataset_id = "Thermostatic/CommonVoice-17.0-Spanish-Filtered"
     print(f"Loading original dataset: {original_dataset_id}...")
-    full_dataset = load_dataset(original_dataset_id, token=HF_TOKEN)
+    full_dataset = load_dataset(original_dataset_id)
     print("Dataset loaded.")
 
     # Step 3: Resample the audio column to the required 16kHz
@@ -82,7 +81,6 @@ def main():
         batched=True,
         batch_size=2048,  # A large batch size speeds up the mapping process
         remove_columns=subset_dataset["train"].column_names, # Remove old columns to keep it clean
-        num_proc=max(1, os.cpu_count() // 2), # Use multiple CPU cores for speed
     )
     print("\nDataset processed successfully:")
     print(processed_dataset)
@@ -90,9 +88,7 @@ def main():
     # Step 5: Upload the final, processed dataset to the Hugging Face Hub
     print(f"\nUploading processed dataset to '{DEST_REPO_ID}'...")
     processed_dataset.push_to_hub(
-        repo_id=DEST_REPO_ID,
-        token=HF_TOKEN,
-        private=True,  # It's good practice to start with a private repo
+        repo_id=DEST_REPO_ID,# It's good practice to start with a private repo
     )
     print("✅ Upload complete!")
     print(f"You can find your processed dataset at: https://huggingface.co/datasets/{DEST_REPO_ID}")
