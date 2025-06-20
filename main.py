@@ -62,9 +62,9 @@ full_dataset = load_dataset("Thermostatic/CommonVoice-17.0-Spanish-Filtered")
 # 2. Create a small subset for debugging
 # We'll take the first 100 samples from the train and validation splits.
 # Using .select() is the standard way to do this.
-train_subset = full_dataset["train"].select(range(10000))
-validation_subset = full_dataset["validation"].select(range(100))
-test_subset = full_dataset["test"].select(range(100))
+train_subset = full_dataset["train"].select(range(8192))
+validation_subset = full_dataset["validation"].select(range(8192))
+test_subset = full_dataset["test"].select(range(8192))
 
 # Create a new DatasetDict with just our subsets
 subset_dataset = DatasetDict({
@@ -81,7 +81,7 @@ subset_dataset = subset_dataset.cast_column("audio", Audio(sampling_rate=16000))
 processed_dataset = subset_dataset.map(
     formatting_prompts_func,
     batched=True,
-    batch_size=1024,
+    batch_size=1512,
     remove_columns=subset_dataset["train"].column_names,
 )
 
@@ -141,7 +141,7 @@ trainer = Seq2SeqTrainer(
     eval_dataset = processed_dataset["validation"],
     tokenizer = tokenizer.feature_extractor,
     args = Seq2SeqTrainingArguments(
-        per_device_train_batch_size = 16,
+        per_device_train_batch_size = 128,
         gradient_accumulation_steps = 4,
         warmup_ratio = 0.1,
         num_train_epochs = 1,
@@ -194,7 +194,7 @@ data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=tokenizer)
 # You can use a larger batch_size now due to inference optimizations
 test_dataloader = DataLoader(
     processed_dataset["test"],
-    batch_size=16, # Increased batch size for faster processing
+    batch_size=128, # Increased batch size for faster processing
     collate_fn=data_collator
 )
 
