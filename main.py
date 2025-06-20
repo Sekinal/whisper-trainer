@@ -57,7 +57,7 @@ def formatting_prompts_func(examples): # The input is now plural 'examples'
 from datasets import load_dataset, Audio, DatasetDict
 # 1. Load the original dataset
 # This will still download the dataset metadata, but we'll only work with a small part.
-full_dataset = load_dataset("Thermostatic/CommonVoice-17.0-Spanish")
+full_dataset = load_dataset("Thermostatic/CommonVoice-17.0-Spanish-Filtered")
 
 # 2. Create a small subset for debugging
 # We'll take the first 100 samples from the train and validation splits.
