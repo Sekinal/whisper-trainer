@@ -27,7 +27,7 @@ source $HOME/.local/bin/env
 # ---
 echo "🔧 Updating package lists and installing tools (micro, neovim)..."
 sudo apt update
-sudo apt install -y micro neovim git btop # Added git to be explicit
+sudo apt install -y micro neovim git btop ncdu # Added git to be explicit
 
 # ---
 # 3. Set up LazyVim configuration for Neovim
